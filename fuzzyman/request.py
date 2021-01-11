@@ -9,11 +9,15 @@ class RequestEncoder(json.JSONEncoder):
 
             request['request']['url'] = o.fuzzed_url
             request['request']['method'] = o.method
+
             if o.header:
                 request['request']['header'] = o.header
             
             if o.body:
-                request['request']['body'] = o.body
+                request['request']['body'] = {
+                    "mode" : "raw",
+                    "raw" : json.dumps(o.body)
+                }
             
             if o.description:
                 request['request']['description'] = o.description
@@ -31,6 +35,10 @@ class Request(object):
         self.scheme = scheme
         self.method = method
         self.header = header
+        self.header = [{
+            "key" : "Content-Type",
+            "value" : "application/json"
+        }]
         self.body = body
         self.description = description
         self.parameters = parameters
@@ -43,15 +51,13 @@ class Request(object):
         self.unfuzzed_url = self.create_url()
         self.fuzzed_url = self.create_url()
 
-        # self.unfuzzed_body = self.create_body()
-        # self.fuzzed_body = self.create_body()
+        self.fuzzed_body = {}
 
-        # self.unfuzzed_query = self.create_query()
-        # self.fuzzed_query = self.create_query()
 
         self._set_params()
         self.fuzz_path_params()
         self.fuzz_query_params()
+        self.body = self.fuzz_body_params()
 
     def __repr__(self):
         return "{!r}".format(self.__dict__)
@@ -67,7 +73,7 @@ class Request(object):
             elif param['in'] == 'query':
                 self.query_parameters.append(param)
             else:
-                raise Exception(f"Not sure what {param['in']} parameter is.")
+                print(f"Not sure what {param['in']} parameter is.")
 
     def fuzz_path_params(self):
         if len(self.path_parameters) == 0:
@@ -88,8 +94,54 @@ class Request(object):
             self.fuzzed_url += param['name'] + "=" + self.fuzz_value
             if i < num_params - 1:
                 self.fuzzed_url += "&"
-        
-        
+
+    def fuzz_body_param_extra_helper(self, body):
+        # If not object or array: set it
+
+        # if object:
+        #     name = fuzz_body_param_extra_helper(object)
+        # if array:
+        # loop through and set each one
+        pass
+
+    def fuzz_body_param_base_helper(self, schema):
+        '''
+{
+    "id" : integer,
+    "petId" : integer,
+    "quantity" : itneger
+    "shipDate" : String
+    "status" : String,
+}
+        '''
+        base = {}
+        for obj in schema.keys():
+            if type(schema[obj]) is dict and schema[obj].get('type') and schema[obj]['type'] == 'object':
+                base[obj] = self.fuzz_body_param_base_helper(schema[obj]['properties'])
+            elif schema[obj].get('type') and schema[obj]['type'] == 'array':
+                base[obj] = []
+                for item in schema[obj].keys():
+                    if type(schema[obj][item]) is dict and 'type' in schema[obj][item].keys():
+                        if schema[obj][item]['type'] != 'object':
+                            base[obj].append(self.fuzz_value)
+                        else:
+                            base[obj].append(self.fuzz_body_param_base_helper(schema[obj][item]['properties']))
+            else:
+                base[obj] = self.fuzz_value
+        return base
+
+
+    def fuzz_body_params(self):
+        if len(self.body_parameters) == 0:
+            return
+        body = {}
+        for param in self.body_parameters:
+            if param['schema']['type'] == 'object':
+                output = self.fuzz_body_param_base_helper(param['schema']['properties'])
+                return output
+            elif param['schema']['type'] == 'array':
+                pass
+
 
     def create_url(self):
         return self.scheme + "://" + self.host + self.path

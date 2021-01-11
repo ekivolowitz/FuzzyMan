@@ -63,21 +63,23 @@ def get_schemes(parser: ResolvingParser):
     return parser.specification['schemes']
 
 def main():
-    parser = ResolvingParser('petstore.yaml', strict=False)
+    parser = ResolvingParser('ggd.yaml', strict=False)
     paths = get_paths(parser.specification)
     host = get_host(parser)
     schemes = get_schemes(parser)
 
     c = Collection()
 
-    # print(f"Host: {host}")
-    # print(f"Schemes: {schemes}")
+
+
     for path in paths:
+        # print(path)
         methods = get_method_from_path(spec=parser.specification, path=path)
-        # print(f"Path: {path} | Methods: {','.join(methods)}")
         for method in methods:
             parameters = get_parameters_for_path(spec=parser.specification, path=path, method=method)
             c.item.append(Request(f"{method.upper()} - {path}", path, host, schemes[0], method, parameters=parameters))
+
+    
 
     print(c)
 
