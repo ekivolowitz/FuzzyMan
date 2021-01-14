@@ -95,25 +95,7 @@ class Request(object):
             if i < num_params - 1:
                 self.fuzzed_url += "&"
 
-    def fuzz_body_param_extra_helper(self, body):
-        # If not object or array: set it
-
-        # if object:
-        #     name = fuzz_body_param_extra_helper(object)
-        # if array:
-        # loop through and set each one
-        pass
-
     def fuzz_body_param_base_helper(self, schema):
-        '''
-{
-    "id" : integer,
-    "petId" : integer,
-    "quantity" : itneger
-    "shipDate" : String
-    "status" : String,
-}
-        '''
         base = {}
         for obj in schema.keys():
             if type(schema[obj]) is dict and schema[obj].get('type') and schema[obj]['type'] == 'object':

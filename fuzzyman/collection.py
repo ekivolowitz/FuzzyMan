@@ -7,6 +7,18 @@ class Collection():
         self.description = description
         self.item = []
     
+    def _get_representation():
+        return {
+            "collection" : {
+                "info" : {
+                    "name" : self.name,
+                    "description" : self.description,
+                    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                },
+                "item" : self.item
+            }
+        }
+
     def __str__(self):
         representation = {
             "collection" : {
