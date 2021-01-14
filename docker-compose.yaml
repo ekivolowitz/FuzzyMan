@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  fuzzyman:
+    build: .
+    image: fuzzyman
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_DEBUG: 1
+    
+    restart: always
+    volumes:
+      - ./:/app

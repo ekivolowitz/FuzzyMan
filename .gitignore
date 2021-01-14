@@ -1,5 +1,6 @@
 *.json
 *.yaml
+!docker-compose.yaml
 venv/
 *.pyc
 __pycache__/

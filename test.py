@@ -1,4 +1,3 @@
-from openapi_parser.parser.loader import OpenApiParser
 from prance import ResolvingParser
 from fuzzyman.request import Request
 from fuzzyman.collection import Collection
