@@ -1,3 +1,5 @@
 prance
 flask
 openapi-spec-validator
+flask_cors
+cryptography

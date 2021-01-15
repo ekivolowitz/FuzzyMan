@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<head>
+    <!-- #ff6c37 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src={{ url_for('static', filename='jquery-3.5.1.min.js' )}}></script>
+    <script>
+
+        function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        $(document).ready(function () {
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+
+            $(".fetch-postman").mousedown(function () {
+                var api_key = $("#postman-api-key").val();
+                if (api_key === "") {
+                    alert("You must enter an api key!");
+                    window.location.href = '/';
+                }
+                var data = $('#data').data();
+                console.log("Data is: ");
+                console.log(data);
+
+                let remove_name = {}
+
+                remove_name['collection'] = data['name']['collection'];
+                console.log(remove_name);
+                async function postData(d) {
+                    var url = "https://api.getpostman.com/collections";
+                    var method = "POST";
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'X-Api-Key': api_key,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(d)
+                    });
+
+                }
+
+                var response = postData(remove_name).then(
+                    d => {
+                        console.log(d);
+                    }
+                )
+
+            })
+        })
+
+
+    </script>
+
+
+    <style>
+        h1 {
+            text-align: center;
+            color: #ff6c37
+        }
+
+        h2 {
+            text-align: center;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Fuzzyman</h1>
+    <h2>By Evan Kivolowitz</h2>
+    <div class='col-sm-12 text-center'>
+        <img src={{ url_for('static', filename='fuzzyman.png' ) }} />
+    </div>
+
+    <form action="/convert" method="POST" enctype='multipart/form-data'>
+        <div class="container"></div>
+        <div class="row">
+            <div class="col-5"></div>
+            <div class="custom-file col-2">
+                <input type="file" id="file" name="file" class="custom-file-input">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <div class="col-5"></div>
+        </div>
+        <div class="row justify-content-center" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary text-center"
+                style="background-color: #ff6c37; border: none">Submit</button>
+        </div>
+    </form>
+
+
+    {% if data %}
+    <meta id="data" data-name="{{data}}">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <p>
+                <br/>
+                Because I'm hosting this for the hackathon, there's no way for me to put the generated collection into
+                <i>your</i> collection. For demonstration purposes, you can enter your postman api key
+                (it's all client side, don't worry!) to upload your Fuzzyman collection to Postman.<br /><br />
+                If you self host, you can put your api key in an environment variable and automatically upload through
+                the backend!
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5"></div>
+        <div class="col-2">
+            <div class="row justify-content-center">
+                <div class="row justify-content-center">
+                    <label>Postman API Key</label>
+                    <input class="form-control" type="text" id="postman-api-key" name="postman-api-key">
+                </div>
+                <div class="row"></div>
+                <div class="row justify-content-center" style="margin-top: 10px;">
+                    <button type="reset" class="fetch-postman btn btn-primary text-center shadow-none"
+                        style="background-color: #ff6c37; border: none">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-5"></div>
+
+    </div>
+    <div class="col-4"></div>
+    </div>
+    {% endif %}
+    <br />
+    <p class="row justify-content-center">by <a href="https://github.com/ekivolowitz">@ekivolowitz</a>
+
+</body>
+
+<!DOCTYPE html>

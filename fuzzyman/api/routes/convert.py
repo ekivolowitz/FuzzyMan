@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app, jsonify
+from flask import Blueprint, request, current_app, jsonify, render_template, redirect, make_response
 from prance import ResolvingParser
 from werkzeug.utils import secure_filename
 from fuzzyman.util import (
@@ -27,7 +27,9 @@ def allowed_file(filename):
     raise Exception(f"Invalid filename or extension")
            
 
-
+@api.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
 
 @api.route('/convert', methods=['POST'])
 def convert_file():
@@ -62,4 +64,10 @@ def convert_file():
             parameters = get_parameters_for_path(spec=parser.specification, path=path, method=method)
             c.item.append(Request(f"{method.upper()} - {path}", path, host, schemes[0], method, parameters=parameters))
 
-    return json.dumps(json.loads(str(c)))
+    data = json.dumps(json.loads(str(c)))
+
+    response = make_response(render_template('index.html', data=data))
+
+    print(f"Returning data: {data}")
+
+    return response
