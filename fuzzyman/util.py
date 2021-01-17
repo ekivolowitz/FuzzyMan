@@ -1,6 +1,17 @@
 from prance import ResolvingParser
-
+from flask import url_for, redirect, flash
 METHODS = ['get', 'post', 'put', 'patch', 'delete', 'copy', 'head', 'options', 'link', 'unlink', 'purge', 'lock', 'unlock', 'propfind', 'view']
+
+def build_response(func):
+    def wrapper(*args, **kwargs):
+        try:
+            response = func(*args, **kwargs)
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('api.index'))
+        return response
+    return wrapper
+
 
 def u_is_valid_path(func):
     def wrapper(*args, **kwargs):

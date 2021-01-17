@@ -9,4 +9,6 @@ def create_app():
     from fuzzyman.api.routes.convert import api
     app.register_blueprint(api)
 
+    app.secret_key = 'not actually necessar'
+
     return app

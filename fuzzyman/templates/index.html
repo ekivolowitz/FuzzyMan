@@ -79,7 +79,6 @@
 </head>
 
 <body>
-
     <h1>Fuzzyman</h1>
     <h3>Upload an OpenApi 2.0 document and automatically create a collection of requests that fuzz your API.</h3>
     <div class='col-sm-12 text-center'>
@@ -102,46 +101,63 @@
         </div>
     </form>
 
-
-    {% if data %}
-    <meta id="data" data-name="{{data}}">
-    <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4">
-            <p>
-                <br/>
-                Because I'm hosting this for the hackathon, there's no way for me to put the generated collection into
-                <i>your</i> collection. For demonstration purposes, you can enter your postman api key
-                (it's all client side, don't worry!) to upload your Fuzzyman collection to Postman.<br /><br />
-                If you self host, you can put your api key in an environment variable and automatically upload through
-                the backend!
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-5"></div>
-        <div class="col-2">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %} 
             <div class="row justify-content-center">
-                <div class="row justify-content-center">
-                    <label>Postman API Key</label>
-                    <input class="form-control" type="text" id="postman-api-key" name="postman-api-key">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <br/>
+                    {% for message in messages %}
+                        <p style="text-align: center;">{{ message }}</p>
+                    {% endfor %}
+                    <p style="text-align: center;">Please make sure your file is a .yaml,.yml file and is valid and try again.</p>
                 </div>
-                <div class="row"></div>
-                <div class="row justify-content-center" style="margin-top: 10px;">
-                    <button type="reset" class="fetch-postman btn btn-primary text-center shadow-none"
-                        style="background-color: #ff6c37; border: none">Submit</button>
-                </div>
+                <div class="col-4"></div>
+            </div>
+        {% endif %}
+        {% if data %}
+        <meta id="data" data-name="{{data}}">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <p>
+                    <br />
+                    Because I'm hosting this for the hackathon, there's no way for me to put the generated collection into
+                    <i>your</i> collection. For demonstration purposes, you can enter your postman api key
+                    (it's all client side, don't worry!) to upload your Fuzzyman collection to Postman.<br /><br />
+                    If you self host, you can put your api key in an environment variable and automatically upload through
+                    the backend!
+                </p>
             </div>
         </div>
-        <div class="col-5"></div>
+        <div class="row">
+            <div class="col-5"></div>
+            <div class="col-2">
+                <div class="row justify-content-center">
+                    <div class="row justify-content-center">
+                        <label>Postman API Key</label>
+                        <input class="form-control" type="text" id="postman-api-key" name="postman-api-key">
+                    </div>
+                    <div class="row"></div>
+                    <div class="row justify-content-center" style="margin-top: 10px;">
+                        <button type="reset" class="fetch-postman btn btn-primary text-center shadow-none"
+                            style="background-color: #ff6c37; border: none">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5"></div>
 
-    </div>
-    <div class="col-4"></div>
-    </div>
-    {% endif %}
+        </div>
+        <div class="col-4"></div>
+        </div>
+        {% endif %}
+
+    {% endwith %}
     <br />
-    <p class="row justify-content-center"><!--by <a href="https://github.com/ekivolowitz">@ekivolowitz</a>-->Created for the 2021 Postman Hackathon.</p>
-    <p class="row justify-content-center"><br/>&#169; Evan Kivolowitz</p>
+    <p class="row justify-content-center">
+        <!--by <a href="https://github.com/ekivolowitz">@ekivolowitz</a>-->Created for the 2021 Postman Hackathon.
+    </p>
+    <p class="row justify-content-center"><br />&#169; Evan Kivolowitz</p>
 
 </body>
 

@@ -1,4 +1,7 @@
 import json
+import string
+import os
+import random
 
 class RequestEncoder(json.JSONEncoder):    
     def default(self, o):
@@ -42,7 +45,7 @@ class Request(object):
         self.body = body
         self.description = description
         self.parameters = parameters
-        self.fuzz_value = 'alsdkfjalsdfjasldfjkalskdjflaksjdf'
+        self.fuzz_value = str(self.get_random_value())
 
         self.path_parameters = []
         self.body_parameters = []
@@ -105,7 +108,7 @@ class Request(object):
                 for item in schema[obj].keys():
                     if type(schema[obj][item]) is dict and 'type' in schema[obj][item].keys():
                         if schema[obj][item]['type'] != 'object':
-                            base[obj].append(self.fuzz_value)
+                            base[obj].append(str(self.fuzz_value))
                         else:
                             base[obj].append(self.fuzz_body_param_base_helper(schema[obj][item]['properties']))
             else:
@@ -123,6 +126,17 @@ class Request(object):
                 return output
             elif param['schema']['type'] == 'array':
                 pass
+
+    def get_random_value(self):
+        x = random.randint(0, 10)
+        if x < 4:
+            return random.randint(-1 * (2**64 - 1), 2**64)
+        elif x < 7:
+            letters = string.ascii_lowercase
+            result_str = ''.join(random.choice(letters) for i in range(random.randint(0, 1000)))
+            return result_str
+        else:
+            return os.urandom(random.randint(0, 1000))
 
 
     def create_url(self):

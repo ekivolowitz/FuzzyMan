@@ -14,6 +14,8 @@ services:
       my-network:
         aliases:
           - flask-app
+    env_file:
+      - fuzzyman_env.env
     ports:
       - 5000:5000
   nginx:
