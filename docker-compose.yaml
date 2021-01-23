@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 services:
   fuzzyman:
     build:
@@ -7,6 +7,7 @@ services:
     image: fuzzyman
     environment:
       FLASK_DEBUG: 0
+      POSTMAN_API_KEY: "${POSTMAN_API_KEY}"
     restart: always
     volumes:
       - ./:/app
@@ -14,8 +15,6 @@ services:
       my-network:
         aliases:
           - flask-app
-    env_file:
-      - fuzzyman_env.env
     ports:
       - 5000:5000
   nginx:

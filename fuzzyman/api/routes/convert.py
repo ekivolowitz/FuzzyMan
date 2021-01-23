@@ -9,4 +9,10 @@ def index():
 
 @api.route('/convert', methods=['POST'])
 def conv_file():
-    return convert_file()
+    try:
+        return convert_file()
+    except:
+        if request.args.get('api'):
+            return jsonify({"status" : "Failed to create collection. Please ensure the file is valid and try again."})
+        else:
+            return render_template('index.html'), 400
