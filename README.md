@@ -14,3 +14,7 @@ POSTMAN_API_KEY=<Your Postman API key goes here>
 4) Run `docker-compose up`
 5) Visit `https://localhost` in your web browser, or see this https://www.postman.com/galactic-shuttle-665520/workspace/postman-hackathon
 for an example of using Fuzzyman as an api.
+
+## Notes
+Because the nginx cert is self-signed, your browser will likely give you a security warning when you visit `https://localhost`. Just accept the risk and continue to see the page.
+The nginx cert
