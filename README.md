@@ -1,7 +1,7 @@
 # Fuzzyman
 Fuzzyman takes your Openapi 2.0 spec and creates a fuzzed collection of your API to help discover bugs and vulnerabilities. The tests can be run with postman runners.
 ## Up and Running
-Fuzzyman can be hosted, but its intended use is to run on a local machine with docker-compose.
+Fuzzyman can be hosted (see [https://fuzzyman.app](https://fuzzyman.app)), but its intended use is to run on a local machine with docker-compose.
 
 Steps to run locally:
 
